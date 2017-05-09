@@ -150,6 +150,26 @@ def driftFig(N = 1000, n1 = 1,  s = 0, reps = 50, x_range = 500):
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+def driftBottleFig(N = 10000, n1 = 1,  s = 0.1, reps = 50, \
+    bottleReduct = 1000, x_range = 200):
+    #n1 = 1, N = 10000, s = 0.2, bottleReduct = 100
+    sims = pgs.multipleDriftBottleSims(n1 = n1, N = N, s = s, bottleReduct = 100, reps = reps)
+    fig = plt.figure(figsize=(8, 5))
+    ax = fig.add_subplot(1, 1, 1)
+    plt.xlabel('Generation', fontsize=20)
+    if s != 0:
+        plt.ylabel('Frequency of beneficial allele', fontsize=20)
+    else:
+        plt.ylabel('Allele frequency', fontsize=20)
+    for sim in sims:
+        plt.plot(sim[0], sim[1], c = 'b', alpha = 0.5)
+    fig.tight_layout()
+    ax.set_xlim(0, x_range)
+    fig_name = mydir + 'Figures/Drift/DriftBottle_N_' + str(N) + '_n_'+ \
+        str(n1) + '_s_' + str(s) + '.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
 def timeToLoss(p = 0.5):
     fig = plt.figure(figsize=(8, 5))
     ax = fig.add_subplot(1, 1, 1)
@@ -624,4 +644,5 @@ def manateeNe():
 #posSelectionFig()
 #balSelectionFig()
 #domSelectionFig()
-manateeNe()
+#manateeNe()
+driftBottleFig()
