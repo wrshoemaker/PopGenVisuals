@@ -11,7 +11,128 @@ from scipy import stats
 mydir = os.path.expanduser("~/GitHub/PopGenVisuals/")
 
 
-def driftFig(N = 1000, n1 = 50,  s = 0, reps = 50, x_range = 500):
+def posSelectionFig(gens = 1000):
+    def selection(s = 0.1, h = 0.5, p = 0.01, gens = 1000):
+        w11 = 1
+        w12 = 1 - (h*s)
+        w22 = 1 - s
+        pFreq = []
+        for x in range(0, gens):
+            if x == 0:
+                pFreq.append(p)
+            else:
+                p_x = pFreq[x-1]
+                num = ((p_x ** 2) * w11) + (p_x * (1-p_x) * w12)
+                w_mean = ((p_x ** 2) * w11) + (2 * p_x * (1-p_x) * w12) + (((1-p_x) ** 2) * w22)
+                pFreq.append(num /  w_mean)
+        return pFreq
+    fig = plt.figure()
+    x = range(0, gens)
+    selection_1 = selection(s = 0.1)
+    selection_01 = selection(s = 0.01)
+    selection_001 = selection(s = 0.001)
+    plt.plot(np.asarray(x), np.asarray(selection_1), lw = 4, c = '#FF6347', label = r'$s=0.1$')
+    plt.plot(np.asarray(x), np.asarray(selection_01), lw = 4, c = '#FFA500', label = r'$s=0.01$')
+    plt.plot(np.asarray(x), np.asarray(selection_001), lw = 4, c = '#87CEEB', label = r'$s=0.001$')
+    plt.ylim(0, 1)
+    plt.legend(loc = 'upper right')
+    plt.xlabel('Time (generations)', fontsize=18)
+    plt.ylabel('Frequency of beneficial allele, ' + r'$p$' , fontsize=16)
+    fig.savefig(mydir + 'Figures/selection/posSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+def negSelectionFig(gens = 1000):
+    def selection(s = -0.1, h = 0.5, p = 0.5, gens = 1000):
+        w11 = 1
+        w12 = 1 - (h*s)
+        w22 = 1 - s
+        pFreq = []
+        for x in range(0, gens):
+            if x == 0:
+                pFreq.append(p)
+            else:
+                p_x = pFreq[x-1]
+                num = ((p_x ** 2) * w11) + (p_x * (1-p_x) * w12)
+                w_mean = ((p_x ** 2) * w11) + (2 * p_x * (1-p_x) * w12) + (((1-p_x) ** 2) * w22)
+                pFreq.append(num /  w_mean)
+        return pFreq
+    fig = plt.figure()
+    x = range(0, gens)
+    selection_1 = selection(s = -0.1)
+    selection_01 = selection(s = -0.01)
+    selection_001 = selection(s = -0.001)
+    plt.plot(np.asarray(x), np.asarray(selection_1), lw = 4, c = '#FF6347', label = r'$s=-0.1$')
+    plt.plot(np.asarray(x), np.asarray(selection_01), lw = 4, c = '#FFA500', label = r'$s=-0.01$')
+    plt.plot(np.asarray(x), np.asarray(selection_001), lw = 4, c = '#87CEEB', label = r'$s=-0.001$')
+    plt.ylim(0, 1)
+    plt.legend(loc = 'upper right')
+    plt.xlabel('Time (generations)', fontsize=18)
+    plt.ylabel('Frequency of beneficial allele, ' + r'$p$' , fontsize=16)
+    fig.savefig(mydir + 'Figures/selection/negSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+def domSelectionFig(gens = 1000):
+    def selection(s = 0.1, h = 0.5, p = 0.01, gens = 1000):
+        w11 = 1
+        w12 = 1 - (h*s)
+        w22 = 1 - s
+        pFreq = []
+        for x in range(0, gens):
+            if x == 0:
+                pFreq.append(p)
+            else:
+                p_x = pFreq[x-1]
+                num = ((p_x ** 2) * w11) + (p_x * (1-p_x) * w12)
+                w_mean = ((p_x ** 2) * w11) + (2 * p_x * (1-p_x) * w12) + (((1-p_x) ** 2) * w22)
+                pFreq.append(num /  w_mean)
+        return pFreq
+    fig = plt.figure()
+    x = range(0, gens)
+    selection_1 = selection(h = 0, s = 0.1)
+    selection_01 = selection(h = 1, s = 0.1)
+    selection_001 = selection(h = 0.5, s = 0.1)
+    plt.plot(np.asarray(x), np.asarray(selection_1), lw = 4, c = '#FF6347', label = r'$Dominant,\; h=0$')
+    plt.plot(np.asarray(x), np.asarray(selection_01), lw = 4, c = '#FFA500', label = r'$Recessive,\; h=1$')
+    plt.plot(np.asarray(x), np.asarray(selection_001), lw = 4, c = '#87CEEB', label = r'$Additive,\;h=0.5$')
+    plt.ylim(0, 1)
+    plt.legend(loc = 'upper right')
+    plt.xlabel('Time (generations)', fontsize=18)
+    plt.ylabel('Frequency of beneficial allele, ' + r'$p$' , fontsize=16)
+    fig.savefig(mydir + 'Figures/selection/domSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+def balSelectionFig(gens = 1000):
+    def selection(s = 0.1, h = 0.5, p = 0.01, gens = 1000):
+        w11 = 1
+        w12 = 1 - (h*s)
+        w22 = 1 - s
+        pFreq = []
+        for x in range(0, gens):
+            if x == 0:
+                pFreq.append(p)
+            else:
+                p_x = pFreq[x-1]
+                num = ((p_x ** 2) * w11) + (p_x * (1-p_x) * w12)
+                w_mean = ((p_x ** 2) * w11) + (2 * p_x * (1-p_x) * w12) + (((1-p_x) ** 2) * w22)
+                pFreq.append(num /  w_mean)
+        return pFreq
+    fig = plt.figure()
+    x = range(0, gens)
+    selection_1 = selection(s = 0.1, h = -0.5,  p = 0.01)
+    selection_01 = selection(s = 0.1, h = -0.5, p = 0.99)
+    selection_001 = selection(s = 0.1, h = -0.5, p = 0.6)
+    plt.plot(np.asarray(x), np.asarray(selection_1), lw = 4, c = '#FF6347', label = r'$h=-0.5$')
+    plt.plot(np.asarray(x), np.asarray(selection_01), lw = 4, c = '#FFA500', label = r'$h=-0.5$')
+    plt.plot(np.asarray(x), np.asarray(selection_001), lw = 4, c = '#87CEEB', label = r'$h=-0.5$')
+    plt.ylim(0, 1)
+    plt.legend(loc = 'upper right')
+    plt.xlabel('Time (generations)', fontsize=18)
+    plt.ylabel('Frequency of beneficial allele, ' + r'$p$' , fontsize=16)
+    fig.savefig(mydir + 'Figures/selection/balSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+
+def driftFig(N = 1000, n1 = 1,  s = 0, reps = 50, x_range = 500):
     sims = pgs.multipleDriftSims(n1 = n1, N = N, s = s, reps = reps)
     fig = plt.figure(figsize=(8, 5))
     ax = fig.add_subplot(1, 1, 1)
@@ -64,22 +185,29 @@ def lossHetero(h_0 = 0.5, t = 500):
 
 
 
-def fixProb(Nmax = 1000000, s = 0.01):
-    def kimura(N, s):
-        return (np.expm1(-2 * s) ) / (np.expm1(-2 * s * N))
-    Ns = np.logspace(1, np.log10(Nmax), num = 1000, base=10.0)
-    fig = plt.figure(figsize=(8, 5))
-    ax = fig.add_subplot(1, 1, 1)
-    plt.xlabel('Population size (N)', fontsize=20)
-    plt.ylabel('Probability of fixation', fontsize=20)
-    Pfix = [kimura(x, s) for x in Ns]
-    plt.plot(Ns, Pfix, c = 'b', lw = 2)
-    fig.tight_layout()
-    #ax.set_xlim(0, 350)
-    ax.set_xscale('log')
-    fig_name = mydir + 'Figures/Drift/prob_fixation.png'
-    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+def probFix(N = 1000000):
+    S = (1/N) *2
+    fig = plt.figure()
+    Ns = []
+    probs = []
+    S_array = np.arange(-S,S,S/1000)
+    for s in S_array:
+        Ns.append(N * s)
+        if s >0:
+            prob = (2*s) / (1 - math.exp(-2*N*s))
+        elif s < 0:
+            prob = (2*-s) / (math.exp(2*N*-s) -1)
+        else:
+            prob = 1/N
+        probs.append(prob * N)
+    plt.plot(np.asarray(Ns), np.asarray(probs))
+    plt.xlim([Ns[0], Ns[-1]])
+    plt.axhline(y=1, c = '#808080', ls='--', lw = 2)
+    plt.xlabel('Scaled selection coefficient (' + r'$N_{e}s$' + ')', fontsize=18)
+    plt.ylabel('Relative fixation probability', fontsize=16)
+    fig.savefig(mydir + 'Figures/Drift/probFix.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
     plt.close()
+
 
 
 def galtonHist():
@@ -358,7 +486,45 @@ def HWE():
     plt.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
     plt.close()
 
-def buriFig():
+def buriHeteroFig():
+    IN_columns = ['Series', 'Generations', 'P', 'Hetero_exp', 'Hetero_obs', \
+                'Var_theor', 'Var_including', 'Var_excluding']
+    IN = pd.read_csv(mydir + 'data/Buri/csv/Table17.csv', sep = ',', \
+        index_col = 0)
+    IN = IN.loc[IN['Series'] == 1]
+    gens = IN.Generations.values[1:]
+    hetero = IN.Hetero_obs.values[1:]
+    P = IN.P.values[1:]
+    def get_expH(Ne = 9):
+        expH = []
+        for i in gens:
+            if i == 1 or i == 2:
+                expH.append(0.5)
+            else:
+                print P[i-2], P[i-3]
+                expH_i = (P[i-2] - ((1/(2*Ne)) * ((2*P[i-2])  - P[i-3]))) * (2*0.5*0.5)
+                expH.append(expH_i)
+        return expH
+    fig = plt.figure()
+    plt.scatter(gens, hetero, c='#87CEEB', marker='o', label='_nolegend_', s = 60)
+    theor_H0_2N18 = [0.5*((1 - (1/18)) ** (gen-1))  for gen in gens]
+    theor_H0_2N32 = [0.5 * ((1 - (1/32))**(gen-1)) for gen in gens]
+
+    plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = r'$N = $' + ' 9')
+    plt.plot(gens, theor_H0_2N32, '--', lw = 2, c = 'k', label = r'$N = $' + ' 16')
+    #plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = '_nolegend_')
+
+    plt.xlabel('Generation', fontsize = 18)
+    plt.ylabel('Heterozygosity, ' + r'$\%$', fontsize = 18)
+    plt.title('''Observed and expected heterozygosity\n in Buri's drift experiment''', fontsize = 24)
+    plt.legend(loc = 'upper right')
+    fig.tight_layout()
+    fig_name = mydir + 'Figures/drift/buriHetero.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+
+def buriDriftGIF():
     IN = pd.read_csv(mydir + 'data/Buri/csv/Table13.csv', sep = ',', \
         header = 'infer', index_col = 0)
     to_keep = ['total_fixed_bw', '1', '2', '3', '4', '5', '6', '7', '8', \
@@ -391,7 +557,7 @@ def buriFig():
         return time_text,
     anim = animation.FuncAnimation(fig, animate,repeat=False,blit=False,frames=n,
                                  interval=100)
-    movie_name = mydir + 'Figures/Buri.gif'
+    movie_name = mydir + 'Figures/Drift/Buri.gif'
     anim.save(movie_name, fps=1, writer='imagemagick')
 
 def bumpusHist():
@@ -412,11 +578,50 @@ def bumpusHist():
     plt.close()
 
 
+def manateeNe():
+    IN = pd.read_csv(mydir + 'data/Manatee.csv', sep = ',' ,  \
+        header = 'infer', index_col = 0)
+    IN.Total = IN.Total.str.replace(',', '')
+    IN.Total = IN.Total.astype(int)
+    total =  IN.groupby(IN.index)['Total'].mean()
+    total_np = total.values
+    year = total.index.values
+    def harmonNe(x):
+        t_inv = 1 / len(x)
+        sum_N = 0
+        for x_i in x:
+            sum_N += 1/x_i
+        return 1 / ( t_inv * sum_N )
+    total_nps = []
+    for x in range(len(year)):
+        total_nps.append(total_np[:x+1])
+    Nes = [harmonNe(x) for x in total_nps]
+    fig = plt.figure()
+    plt.plot(year, total_np, 'k-', lw = 2, c = '#87CEEB', label = r'$N$')
+    plt.plot(year, Nes, '--', lw = 2, c = '#87CEEB', label = r'$N_{e}$')
+    #plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = '_nolegend_')
+
+    plt.xlabel('Year', fontsize = 18)
+    plt.ylabel('Population size', fontsize = 18)
+    plt.title('The effective and emperical size \nof the total manatee population', fontsize = 24)
+    plt.legend(loc = 'upper left')
+    fig.tight_layout()
+    fig_name = mydir + 'Figures/drift/manatee.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
 #driftFig(N = 100, n1 = 50,  s = 0, reps = 50)
 #driftFig(N = 1000, n1 = 500,  s = 0, reps = 50)
+#driftFig(N = 10000, n1 = 5000,  s = 0, reps = 50)
 #driftFig(N = 1000, n1 = 1,  s = 0.1, reps = 50, x_range = 150)
+#driftFig(N = 10000, n1 = 1,  s = 0.1, reps = 50, x_range = 150)
 #lossHetero()
 #multiLocusTraits(L = 2)
 #galtonRegress()
 
-bumpusHist()
+#probFix()
+#lossHetero()
+#posSelectionFig()
+#balSelectionFig()
+#domSelectionFig()
+manateeNe()
