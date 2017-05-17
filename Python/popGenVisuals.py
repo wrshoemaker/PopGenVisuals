@@ -7,6 +7,8 @@ import matplotlib.mlab as mlab
 from matplotlib import animation
 import pandas as pd
 from scipy import stats
+import statsmodels.formula.api as smf
+from statsmodels.graphics.factorplots import interaction_plot
 
 mydir = os.path.expanduser("~/GitHub/PopGenVisuals/")
 
@@ -281,6 +283,52 @@ def galtonRegress():
     plt.close()
 
 
+def galtonRegressInter():
+    IN = pd.read_csv(mydir + 'data/Galton.csv', sep = ',')
+    IN['Midparent'] = IN[['Father', 'Mother']].mean(axis=1)
+    mod1 = smf.ols(formula='Height ~ Midparent + C(Gender)', data=IN).fit()
+    mod2 = smf.ols(formula='Height ~ Midparent * C(Gender)', data=IN).fit()
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    midparent = IN.Midparent.values
+    gender = IN.Gender.values
+    height = IN.Height.values
+    fig = interaction_plot(x=midparent, trace=gender, response=height,
+                           colors=['#FF6347', '#87CEEB'], markers=['D', '^'], ms=10, ax=ax)
+    plt.title('Interaction plot for the influence of mid-parent \n \
+        height and gender on offspring height', fontsize = 20)
+    plt.xlabel('Mid-parent height (inches)', fontsize = 18)
+    plt.ylabel('Mean of response', fontsize = 18)
+    fig_name = mydir + 'Figures/galtonRegressInterPlot.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+    x_M = IN.loc[IN['Gender'] == 'M'].Midparent
+    x_F = IN.loc[IN['Gender'] == 'F'].Midparent
+    y_M = IN.loc[IN['Gender'] == 'M'].Height
+    y_F = IN.loc[IN['Gender'] == 'F'].Height
+
+    fig = plt.figure()
+    plt.scatter(x_M, y_M, c='#87CEEB', marker='o', label='Men')
+    plt.scatter(x_F, y_F, c='#FF6347', marker='o', label='Women')
+    y_pred_F = mod1.params[0] + mod1.params[1] * 0 + mod1.params[2] * midparent
+    y_pred_M = mod1.params[0] + mod1.params[1] * 1 + mod1.params[2] * midparent
+    plt.plot(midparent, y_pred_F, 'k-', lw = 5, c = 'black', label = '_nolegend_' )
+    plt.plot(midparent, y_pred_F, 'k-', lw = 2, c = '#FF6347', label = '_nolegend_')
+    plt.plot(midparent, y_pred_M, 'k-', lw = 5, c = 'black', label = '_nolegend_' )
+    plt.plot(midparent, y_pred_M, 'k-', lw = 2, c = '#87CEEB', label = '_nolegend_')
+
+    #plt.plot(midparent, y_pred_F, c = '#FF6347')
+    #plt.plot(midparent, y_pred_M, c = '#87CEEB')
+
+    fig_name = mydir + 'Figures/galtonRegressInter.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+
+
+
+
 def multiLocusTraits(L = 2):
     freqs = [0.25, 0.5, 0.25]
     fig = plt.figure()
@@ -530,8 +578,8 @@ def buriHeteroFig():
     theor_H0_2N18 = [0.5*((1 - (1/18)) ** (gen-1))  for gen in gens]
     theor_H0_2N32 = [0.5 * ((1 - (1/32))**(gen-1)) for gen in gens]
 
-    plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = r'$N = $' + ' 9')
-    plt.plot(gens, theor_H0_2N32, '--', lw = 2, c = 'k', label = r'$N = $' + ' 16')
+    plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = r'$N_{e} = $' + ' 9')
+    plt.plot(gens, theor_H0_2N32, '--', lw = 2, c = 'k', label = r'$N_{e} = $' + ' 16')
     #plt.plot(gens, theor_H0_2N18, 'k-', lw = 2, c = 'k', label = '_nolegend_')
 
     plt.xlabel('Generation', fontsize = 18)
@@ -630,6 +678,39 @@ def manateeNe():
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+def DFE():
+    fig = plt.figure()
+    x1 = np.linspace(0, 20, 100)
+    y1 = stats.f.pdf(x1, 1, 1) * 2.5
+    y1[0] = 1.67292614
+    x2 = np.linspace(0, 3, 100)
+    y2 = stats.lognorm.pdf(x2, 0.25)
+    y2 = y2[::-1]
+    x = np.concatenate([x1,x1 + 20])
+    y = np.concatenate([y1,y2])
+    x_y = zip(x,y)
+    for i, x_y_i in enumerate(x_y):
+        if x_y_i[0] >= 20 and x_y_i[0] < 26:
+            y[i] = y[99]
+
+    plt.plot(x, y, c = 'black', lw = 2)
+    plt.fill_between(x[:125], 0, y[:125], facecolor = 'black', label = 'Lethal')
+    plt.fill_between(x[125:167], 0, y[125:167], facecolor = '#FF6347', label = 'Deleterious')
+    plt.fill_between(x[166:178], 0, y[166:178], facecolor = '#FFA500', label = 'Effectively neutral')
+    plt.fill_between(x[177:], 0, y[177:], facecolor = '#87CEEB', label = 'Beneficial')
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_ticks([])
+    frame.axes.get_yaxis().set_ticks([])
+    plt.xlabel('Fitness effect', fontsize = 18)
+    plt.ylabel('Frequency', fontsize = 18)
+    plt.title('The distribution of fitness effects', fontsize = 24)
+    plt.legend(loc='upper left')
+    plt.xlim(0, 40)
+    fig.tight_layout()
+    fig_name = mydir + 'Figures/mutation/DFE.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
 #driftFig(N = 100, n1 = 50,  s = 0, reps = 50)
 #driftFig(N = 1000, n1 = 500,  s = 0, reps = 50)
 #driftFig(N = 10000, n1 = 5000,  s = 0, reps = 50)
@@ -646,5 +727,8 @@ def manateeNe():
 #domSelectionFig()
 #manateeNe()
 #driftBottleFig()
-negSelectionFig()
-balSelectionFig()
+#negSelectionFig()
+#balSelectionFig()
+#galtonRegressInter()
+#buriHeteroFig()
+DFE()
