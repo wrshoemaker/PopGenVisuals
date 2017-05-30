@@ -43,6 +43,7 @@ def posSelectionFig(gens = 1000):
     fig.savefig(mydir + 'Figures/selection/posSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
     plt.close()
 
+
 def negSelectionFig(gens = 1000):
     def selection(s = -0.1, h = 0.5, p = 0.5, gens = 1000):
         w11 = 1
@@ -73,6 +74,7 @@ def negSelectionFig(gens = 1000):
     fig.savefig(mydir + 'Figures/selection/negSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
     plt.close()
 
+
 def domSelectionFig(gens = 1000):
     def selection(s = 0.1, h = 0.5, p = 0.01, gens = 1000):
         w11 = 1
@@ -102,6 +104,7 @@ def domSelectionFig(gens = 1000):
     plt.ylabel('Frequency of beneficial allele, ' + r'$p$' , fontsize=16)
     fig.savefig(mydir + 'Figures/selection/domSelection.png', bbox_inches='tight', pad_inches = 0.4, dpi = 600)
     plt.close()
+
 
 def balSelectionFig(gens = 1000):
     def selection(s = 0.1, h = 0.5, p = 0.01, gens = 1000):
@@ -152,6 +155,7 @@ def driftFig(N = 1000, n1 = 1,  s = 0, reps = 50, x_range = 500):
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+
 def driftBottleFig(N = 10000, n1 = 1,  s = 0.1, reps = 50, \
     bottleReduct = 1000, x_range = 200):
     #n1 = 1, N = 10000, s = 0.2, bottleReduct = 100
@@ -172,6 +176,7 @@ def driftBottleFig(N = 10000, n1 = 1,  s = 0.1, reps = 50, \
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+
 def timeToLoss(p = 0.5):
     fig = plt.figure(figsize=(8, 5))
     ax = fig.add_subplot(1, 1, 1)
@@ -185,6 +190,7 @@ def timeToLoss(p = 0.5):
     fig_name = mydir + 'Figures/Drift/time_to_loss.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
+
 
 def lossHetero(h_0 = 0.5, t = 500):
     fig = plt.figure(figsize=(8, 5))
@@ -204,7 +210,6 @@ def lossHetero(h_0 = 0.5, t = 500):
     fig_name = mydir + 'Figures/Drift/loss_hetero.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
-
 
 
 def probFix(N = 1000000):
@@ -231,8 +236,7 @@ def probFix(N = 1000000):
     plt.close()
 
 
-
-def galtonHist():
+def galtonHist(var = False):
     IN = pd.read_csv(mydir + 'data/Galton.csv', sep = ',')
     M = IN.loc[IN['Gender'] == 'M'].Height
     F = IN.loc[IN['Gender'] == 'F'].Height
@@ -243,10 +247,14 @@ def galtonHist():
     plt.ylabel('Number of individuals', fontsize = 18)
     plt.ylim(0, 75)
     plt.legend(loc = 'upper left')
+    if var == True:
+        fig_name = mydir + 'Figures/galtonHistVar.png'
+    else:
+        fig_name = mydir + 'Figures/galtonHist.png'
     fig.tight_layout()
-    fig_name = mydir + 'Figures/galtonHist.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
+
 
 def galtonRegress():
     IN = pd.read_csv(mydir + 'data/Galton.csv', sep = ',')
@@ -324,9 +332,6 @@ def galtonRegressInter():
     fig_name = mydir + 'Figures/galtonRegressInter.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
-
-
-
 
 
 def multiLocusTraits(L = 2):
@@ -531,6 +536,38 @@ def multiLocusTraits(L = 2):
     fig.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
     plt.close()
 
+def histVar():
+    np.random.seed(19680801)
+    mu = 400
+    sigma1 = 100
+    sigma2 = 50
+    fig = plt.figure()
+    x1 = mu + sigma1 * np.random.randn(100000 )
+    x2 = mu + sigma2 * np.random.randn(100000 )
+    plt.xlabel('Trait value', fontsize = 18)
+    plt.ylabel('Frequency', fontsize = 18)
+    plt.hist(x2, 100, fc='#87CEEB', histtype='bar', alpha=0.5, normed = 1)
+    plt.hist(x1, 100, fc='#FF6347', histtype='bar', alpha=0.5, normed = 1)
+    plt.ylim(0, 0.01)
+    plt.xlim(0, 800)
+    fig.tight_layout()
+    fig_name = mydir + 'Figures/multiLocusTraits/histVar.png'
+    fig.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
+    plt.close()
+
+    #fig = plt.figure()
+    #x2 = mu + sigma2 * np.random.randn(100000 )
+    #x = 100*np.random.randn(100000)
+    #plt.xlabel('Trait value', fontsize = 18)
+    #plt.ylabel('Frequency', fontsize = 18)
+    #plt.hist(x, 100, fc='#87CEEB', histtype='bar', alpha=0.8, normed = 1)
+    #plt.ylim(0, 0.01)
+    #plt.xlim(0, 800)
+    #fig.tight_layout()
+    #fig_name = mydir + 'Figures/multiLocusTraits/histVar2.png'
+    #fig.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
+    #plt.close()
+
 
 def HWE():
     p = np.linspace(0, 1, num = 1000)
@@ -553,6 +590,7 @@ def HWE():
     fig_name = mydir + 'Figures/HWE.png'
     plt.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
     plt.close()
+
 
 def buriHeteroFig():
     IN_columns = ['Series', 'Generations', 'P', 'Hetero_exp', 'Hetero_obs', \
@@ -608,11 +646,9 @@ def buriDriftGIF():
                 '0.375', '', '', '', '0.5', '', '', '', '0.625', '', '', '', \
                 '0.75', '', '', '', '0.875', '', '', '', '1.0']
     plt.xticks(x, labels, rotation='horizontal')
-
     barcollection = plt.bar(x,IN_data.ix[0,:].values, color = '#87CEEB')
     #time_text = ax.text(0.85, 0.9, '', transform=ax.transAxes)
     time_text = ax.text(.8, .9, '', fontsize=15)
-
     ax.set_title('''Buri's ''' + r'$D. \, melanogaster$' + ' drift experiment', fontsize = 22)
     ax.set_xlabel('Frequency of ' + r'$bw^{75}$' + ' allele', fontsize = 20)
     ax.set_ylabel('Fraction of populations', fontsize = 20)
@@ -627,6 +663,7 @@ def buriDriftGIF():
                                  interval=100)
     movie_name = mydir + 'Figures/Drift/Buri.gif'
     anim.save(movie_name, fps=1, writer='imagemagick')
+
 
 def bumpusHist():
     IN = pd.read_csv(mydir + 'data/bumpus_full.csv', sep = ',', \
@@ -678,7 +715,8 @@ def manateeNe():
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
-def DFE():
+
+def DFE(high_Ne = True):
     fig = plt.figure()
     x1 = np.linspace(0, 20, 100)
     y1 = stats.f.pdf(x1, 1, 1) * 2.5
@@ -695,9 +733,14 @@ def DFE():
 
     plt.plot(x, y, c = 'black', lw = 2)
     plt.fill_between(x[:125], 0, y[:125], facecolor = 'black', label = 'Lethal')
-    plt.fill_between(x[125:167], 0, y[125:167], facecolor = '#FF6347', label = 'Deleterious')
-    plt.fill_between(x[166:178], 0, y[166:178], facecolor = '#FFA500', label = 'Effectively neutral')
-    plt.fill_between(x[177:], 0, y[177:], facecolor = '#87CEEB', label = 'Beneficial')
+    if high_Ne == False:
+        plt.fill_between(x[125:167], 0, y[125:167], facecolor = '#FF6347', label = 'Deleterious')
+        plt.fill_between(x[166:178], 0, y[166:178], facecolor = '#FFA500', label = 'Effectively neutral')
+        plt.fill_between(x[177:], 0, y[177:], facecolor = '#87CEEB', label = 'Beneficial')
+    else:
+        plt.fill_between(x[125:171], 0, y[125:171], facecolor = '#FF6347', label = 'Deleterious')
+        plt.fill_between(x[170:174], 0, y[170:174], facecolor = '#FFA500', label = 'Effectively neutral')
+        plt.fill_between(x[173:], 0, y[173:], facecolor = '#87CEEB', label = 'Beneficial')
     frame = plt.gca()
     frame.axes.get_xaxis().set_ticks([])
     frame.axes.get_yaxis().set_ticks([])
@@ -707,9 +750,10 @@ def DFE():
     plt.legend(loc='upper left')
     plt.xlim(0, 40)
     fig.tight_layout()
-    fig_name = mydir + 'Figures/mutation/DFE.png'
+    fig_name = mydir + 'Figures/mutation/DFE_' +  str(high_Ne)  + '.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
+
 
 #driftFig(N = 100, n1 = 50,  s = 0, reps = 50)
 #driftFig(N = 1000, n1 = 500,  s = 0, reps = 50)
@@ -731,4 +775,9 @@ def DFE():
 #balSelectionFig()
 #galtonRegressInter()
 #buriHeteroFig()
-DFE()
+#DFE(high_Ne = True)
+#DFE(high_Ne = False)/
+
+#galtonHist(var = False)
+#galtonHist(var = True)
+histVar()
