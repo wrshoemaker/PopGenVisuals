@@ -591,6 +591,29 @@ def HWE():
     plt.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
     plt.close()
 
+def HWE_2pq():
+    p = np.linspace(0, 1, num = 1000)
+    p2 = p ** 2
+    q = 1 - p
+    q2 = q ** 2
+    pq2 = 2 * p * q
+    #fig = plt.figure()
+    plt.subplot(111)
+
+    #plt.plot(p, p2, 'k-', lw = 4, c = '#87CEEB', label = r'$p^{2}$' )
+    #plt.plot(p, q2, 'k-', lw = 4, c = '#FFA500', label = r'$q^{2}$' )
+    plt.plot(p, pq2, 'k-', lw = 4, c = '#FF6347', label = r'$2pq$' )
+    plt.xlabel(r'$p$', fontsize = 18)
+    plt.xlabel(r'$p$', fontsize = 18)
+    plt.ylabel('Genotype frequency', fontsize = 18)
+    plt.ylim(0, 1)
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
+       ncol=3, mode="expand", borderaxespad=0.)
+
+    fig_name = mydir + 'Figures/HWE_2pq.png'
+    plt.savefig(fig_name, bbox_inches = None, pad_inches = 0.8, dpi = 600)
+    plt.close()
+
 
 def buriHeteroFig():
     IN_columns = ['Series', 'Generations', 'P', 'Hetero_exp', 'Hetero_obs', \
@@ -780,4 +803,5 @@ def DFE(high_Ne = True):
 
 #galtonHist(var = False)
 #galtonHist(var = True)
-histVar()
+#histVar()
+HWE_2pq()
